@@ -134,8 +134,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\engine\global.c" />
+    <ClCompile Include="src\engine\io\io.c" />
     <ClCompile Include="src\engine\render\render.c" />
     <ClCompile Include="src\engine\render\render_init.c" />
+    <ClCompile Include="src\engine\render\render_util.c" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\main.c" />
   </ItemGroup>
@@ -153,9 +155,12 @@
     <None Include="libvorbisfile-3.dll" />
     <None Include="SDL2.dll" />
     <None Include="SDL2_mixer.dll" />
+    <None Include="shaders\default.frag" />
+    <None Include="shaders\default.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\global.h" />
+    <ClInclude Include="src\engine\io\io.h" />
     <ClInclude Include="src\engine\render\render_internal.h" />
     <ClInclude Include="src\engine\render\render.h" />
     <ClInclude Include="src\engine\util.h" />

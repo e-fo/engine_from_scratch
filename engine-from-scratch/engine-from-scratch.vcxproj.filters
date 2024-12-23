@@ -30,6 +30,12 @@
     <ClCompile Include="src\engine\global.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\io\io.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\render\render_util.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="build.bat">
@@ -49,6 +55,8 @@
     <None Include="libvorbisfile-3.dll" />
     <None Include="SDL2.dll" />
     <None Include="SDL2_mixer.dll" />
+    <None Include="shaders\default.frag" />
+    <None Include="shaders\default.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\types.h">
@@ -64,6 +72,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\render\render_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\io\io.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
