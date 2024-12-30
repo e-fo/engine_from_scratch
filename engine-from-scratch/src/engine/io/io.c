@@ -4,7 +4,7 @@
 
 #include "../types.h"
 #include "../util.h"
-#include "io.h"
+#include "../io.h"
 
 #define IO_READ_CHUNK_SIZE 2097152
 #define IO_READ_ERROR_GENERAL "Error reading file: %s. error: %d\n"
@@ -14,7 +14,7 @@
 File io_file_read(const char* path) {
 	File file = { .is_valid = false };
 	FILE* fp = fopen(path, "rb");
-	if (ferror(fp)) {
+	if ( !fp || ferror(fp) ) {
 		ERROR_RETURN(file, IO_READ_ERROR_GENERAL, path, errno);
 	}
 
@@ -63,4 +63,17 @@ File io_file_read(const char* path) {
 	return file;
 
 }
-int io_file_write(void* buffer, size_t size, const char* path);
+int io_file_write(void* buffer, size_t size, const char* path) {
+	FILE* fp = fopen(path, "wb");
+	if (!fp || ferror(fp))
+		ERROR_RETURN(1, "Cannot write file: %s. \n", path);
+
+	size_t chunks_written = fwrite(buffer, size, 1, fp);
+	fclose(fp);
+
+	if (chunks_written != 1) {
+		ERROR_RETURN(1, "Write error. Expected 1 chunk, go %zu. \n", chunks_written);
+	}
+
+	return 0;
+}

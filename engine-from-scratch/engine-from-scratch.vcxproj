@@ -133,11 +133,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\config\config.c" />
     <ClCompile Include="src\engine\global.c" />
+    <ClCompile Include="src\engine\input\input.c" />
     <ClCompile Include="src\engine\io\io.c" />
     <ClCompile Include="src\engine\render\render.c" />
     <ClCompile Include="src\engine\render\render_init.c" />
     <ClCompile Include="src\engine\render\render_util.c" />
+    <ClCompile Include="src\engine\time\time.c" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\main.c" />
   </ItemGroup>
@@ -159,10 +162,13 @@
     <None Include="shaders\default.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\config.h" />
     <ClInclude Include="src\engine\global.h" />
-    <ClInclude Include="src\engine\io\io.h" />
+    <ClInclude Include="src\engine\input.h" />
+    <ClInclude Include="src\engine\io.h" />
     <ClInclude Include="src\engine\render\render_internal.h" />
-    <ClInclude Include="src\engine\render\render.h" />
+    <ClInclude Include="src\engine\render.h" />
+    <ClInclude Include="src\engine\time.h" />
     <ClInclude Include="src\engine\util.h" />
     <ClInclude Include="src\engine\types.h" />
   </ItemGroup>

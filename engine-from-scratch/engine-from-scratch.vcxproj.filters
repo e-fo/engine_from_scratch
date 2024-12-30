@@ -36,6 +36,15 @@
     <ClCompile Include="src\engine\render\render_util.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\input\input.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\config\config.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\time\time.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="build.bat">
@@ -65,7 +74,7 @@
     <ClInclude Include="src\engine\util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\render\render.h">
+    <ClInclude Include="src\engine\render.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\global.h">
@@ -74,7 +83,16 @@
     <ClInclude Include="src\engine\render\render_internal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\io\io.h">
+    <ClInclude Include="src\engine\io.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\time.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
