@@ -18,8 +18,6 @@ usize entity_create(
 	On_Hit_Static on_hit_static
 )
 {
-	//vec2_scale(size, size, 0.5);
-
 	Entity entity = {
 		.body_id = physics_body_create(position, size, velocity, collision_layer, collision_mask, on_hit, on_hit_static),
 		.is_active = true,

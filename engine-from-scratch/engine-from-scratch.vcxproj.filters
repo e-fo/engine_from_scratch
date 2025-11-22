@@ -75,6 +75,8 @@
     <None Include="SDL2_mixer.dll" />
     <None Include="shaders\default.frag" />
     <None Include="shaders\default.vert" />
+    <None Include="shaders\batch_quad.vert" />
+    <None Include="shaders\batch_quad.frag" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\types.h">
