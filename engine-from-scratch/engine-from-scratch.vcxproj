@@ -134,6 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\animation\animation.c" />
     <ClCompile Include="src\engine\array_list\array_list.c" />
     <ClCompile Include="src\engine\config\config.c" />
     <ClCompile Include="src\engine\entity\entity.c" />
@@ -168,6 +169,7 @@
     <None Include="shaders\default.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\animation.h" />
     <ClInclude Include="src\engine\array_list.h" />
     <ClInclude Include="src\engine\config.h" />
     <ClInclude Include="src\engine\entity.h" />

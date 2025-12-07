@@ -9,8 +9,8 @@
 #include "../util.h"
 #include "render_internal.h"
 
-static f32 window_width = 1920;
-static f32 window_height = 1080;
+static f32 window_width = 1600;
+static f32 window_height = 900;
 static f32 render_width = 640;
 static f32 render_height = 360;
 static f32 scale = 3;
@@ -205,13 +205,20 @@ static void calculate_sprite_texture_coordinates(vec4 result, f32 row, f32 colum
 	result[3] = y + h;
 }
 
-void render_sprite_sheet_frame(Sprite_Sheet* sprite_sheet, f32 row, f32 column, vec2 position)
+void render_sprite_sheet_frame(Sprite_Sheet* sprite_sheet, f32 row, f32 column, vec2 position, bool is_flipped)
 {
 	vec4 uvs;
 	calculate_sprite_texture_coordinates(uvs, row, column, sprite_sheet->width, sprite_sheet->height, sprite_sheet->cell_width, sprite_sheet->cell_height);
 
+	if (is_flipped)
+	{
+		f32 tmp = uvs[0];
+		uvs[0] = uvs[2];
+		uvs[2] = tmp;
+	}
+
 	vec2 size = { sprite_sheet->cell_width, sprite_sheet->cell_height };
-	vec2 bottom_left = { position[0] - size[0] * 0.5f, position[1] - size[1] * 0.5f };
+	vec2 bottom_left = { position[0] - size[0] * 0.5, position[1] - size[1] * 0.5 };
 
 	append_quad(bottom_left, size, uvs, WHITE);
 }

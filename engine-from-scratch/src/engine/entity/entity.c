@@ -20,6 +20,7 @@ usize entity_create(
 {
 	Entity entity = {
 		.body_id = physics_body_create(position, size, velocity, collision_layer, collision_mask, on_hit, on_hit_static),
+		.animation_id = (usize)-1,
 		.is_active = true,
 	};
 	return array_list_append(entity_list, &entity);

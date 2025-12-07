@@ -54,6 +54,9 @@
     <ClCompile Include="src\engine\entity\entity.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\animation\animation.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="build.bat">
@@ -116,6 +119,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\animation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
