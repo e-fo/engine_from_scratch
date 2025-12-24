@@ -24,6 +24,8 @@ struct body {
 	On_Hit_Static on_hit_static;
 	u8 collision_layer;
 	u8 collision_mask;
+	bool is_kinematic;
+	bool is_active;
 };
 
 struct static_body {
@@ -48,7 +50,8 @@ usize physics_body_create(
 	vec2 size, 
 	vec2 velocity, 
 	u8 collision_layer, 
-	u8 collition_mask, 
+	u8 collition_mask,
+	bool is_kinematic,
 	On_Hit on_hit, 
 	On_Hit_Static on_hit_static
 );

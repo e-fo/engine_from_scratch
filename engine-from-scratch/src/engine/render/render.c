@@ -9,8 +9,8 @@
 #include "../util.h"
 #include "render_internal.h"
 
-static f32 window_width = 1600;
-static f32 window_height = 900;
+static f32 window_width = 1920;
+static f32 window_height = 1080;
 static f32 render_width = 640;
 static f32 render_height = 360;
 static f32 scale = 3;

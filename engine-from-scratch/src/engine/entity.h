@@ -18,6 +18,7 @@ usize entity_create(
 	vec2 velocity,
 	u8 collision_layer,
 	u8 collision_mask,
+	bool is_kinematic,
 	On_Hit on_hit, 
 	On_Hit_Static on_hit_static
 );
