@@ -12,10 +12,12 @@ void entity_init(void)
 usize entity_create(
 	vec2 position,
 	vec2 size,
+	vec2 sprite_offset,
 	vec2 velocity,
 	u8 collision_layer,
 	u8 collision_mask,
 	bool is_kinematic,
+	usize animation_id,
 	On_Hit on_hit,
 	On_Hit_Static on_hit_static
 )
@@ -50,8 +52,9 @@ usize entity_create(
 			on_hit, 
 			on_hit_static
 		),
-		.animation_id = (usize)-1,
+		.animation_id = animation_id,
 		.is_active = true,
+		.sprite_offset = { sprite_offset[0], sprite_offset[1] },
 	};
 
 	return id;

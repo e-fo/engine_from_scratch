@@ -57,6 +57,7 @@ usize physics_body_create(
 );
 Body* physics_body_get(usize index);
 Static_Body* physics_static_body_get(usize index);
+usize physics_static_body_count();
 usize physics_static_body_create(vec2 position, vec2 size, u8 collision_layer);
 bool physics_point_intersect_aabb(vec2 point, AABB aabb);
 bool physics_aabb_intersect_aabb(AABB a, AABB b);

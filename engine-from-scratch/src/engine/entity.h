@@ -9,19 +9,24 @@ typedef struct entity {
 	usize body_id;
 	usize animation_id;
 	bool is_active;
+	vec2 sprite_offset;
 } Entity;
 
 void entity_init(void);
 usize entity_create(
 	vec2 position,
 	vec2 size,
+	vec2 sprite_offset,
 	vec2 velocity,
 	u8 collision_layer,
 	u8 collision_mask,
 	bool is_kinematic,
+	usize animation_id,
 	On_Hit on_hit, 
 	On_Hit_Static on_hit_static
 );
-
 Entity* entity_get(usize id);
-usize entity_count();
+usize entity_count(void);
+void entity_reset(void);
+void entity_damage(usize entity_id, u8 damage);
+void entity_destroy(usize entity_id);
