@@ -13,7 +13,7 @@ void animation_init(void)
 	animation_storage = array_list_create(sizeof(Animation), 0);
 }
 
-usize animation_definition_create(Sprite_Sheet* sprite_sheet, f32* durations, u8* rows, u8* columns, u8 frame_count) 
+usize animation_definition_create(Sprite_Sheet* sprite_sheet, f32 duration, u8 row, u8* columns, u8 frame_count) 
 {
 	assert(frame_count <= MAX_FRAMES);
 	
@@ -27,8 +27,8 @@ usize animation_definition_create(Sprite_Sheet* sprite_sheet, f32* durations, u8
 		def.frames[i] = (Animation_Frame)
 		{
 			.column = columns[i],
-			.row = rows[i],
-			.duration = durations[i]
+			.row = row,
+			.duration = duration
 		};
 	}
 
@@ -63,7 +63,7 @@ usize animation_create(usize animation_definition_id, bool does_loop)
 	Animation* animation = array_list_get(animation_storage, id);
 
 	*animation = (Animation){
-		.definition = adef,
+		.animation_definition_id = animation_definition_id,
 		.does_loop = does_loop,
 		.is_active = true,
 	};
@@ -86,7 +86,7 @@ void animation_update(f32 dt)
 	for (usize i = 0; i < animation_storage->len; ++i)
 	{
 		Animation* animation = array_list_get(animation_storage, i);
-		Animation_Definition* adef = animation->definition;
+		Animation_Definition* adef = array_list_get(animation_definition_storage, animation->animation_definition_id);
 		animation->current_frame_time -= dt;
 
 		if (animation->current_frame_time <= 0)
@@ -94,7 +94,7 @@ void animation_update(f32 dt)
 			animation->current_frame_index += 1;
 
 			// loop or stay on last frame.
-			if (animation->current_frame_index == animation->definition->frame_count)
+			if (animation->current_frame_index == adef->frame_count)
 			{
 				if (animation->does_loop)
 				{
@@ -113,7 +113,7 @@ void animation_update(f32 dt)
 
 void animation_render(Animation* animation, vec2 position, vec4 color, u32 texture_slots[8])
 {
-	Animation_Definition* adef = animation->definition;
+	Animation_Definition* adef = array_list_get(animation_definition_storage, animation->animation_definition_id);
 	Animation_Frame* aframe = &adef->frames[animation->current_frame_index];
 	render_sprite_sheet_frame(adef->sprite_sheet, aframe->row, aframe->column, position, animation->is_flipped, WHITE, texture_slots);
 }

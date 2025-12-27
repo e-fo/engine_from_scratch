@@ -45,7 +45,7 @@ usize entity_create(
 		.body_id = physics_body_create(
 			position, 
 			size, 
-			velocity, 
+			velocity,
 			collision_layer, 
 			collision_mask, 
 			is_kinematic, 

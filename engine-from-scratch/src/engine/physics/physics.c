@@ -177,6 +177,11 @@ static void stationary_response(Body* body)
 	{
 		Static_Body* static_body = physics_static_body_get(i);
 
+		// respect collision masks: if the body shouldn't collide with this static body's layer, skip it.
+		if ((body->collision_mask & static_body->collision_layer) == 0) {
+			continue;
+		}
+
 		AABB aabb = aabb_minkowski_difference(static_body->aabb, body->aabb);
 		vec2 min, max;
 		aabb_min_max(min, max, aabb);
