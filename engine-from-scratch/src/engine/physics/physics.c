@@ -13,7 +13,7 @@ void physics_init(void) {
 	state.body_list = array_list_create(sizeof(Body), 0);
 	state.static_body_list = array_list_create(sizeof(Static_Body), 0);
 
-	state.gravity = -100;
+	state.gravity = -79;
 	state.terminal_velocity = -7000;
 
 	tick_rate = 1.f / iterations;
@@ -255,7 +255,8 @@ usize physics_body_create(
 	u8 collision_mask,
 	bool is_kinematic,
 	On_Hit on_hit,
-	On_Hit_Static on_hit_static
+	On_Hit_Static on_hit_static,
+	usize entity_id
 ) 
 {
 	usize id = state.body_list->len;
@@ -289,6 +290,7 @@ usize physics_body_create(
 		.on_hit_static = on_hit_static,
 		.is_kinematic = is_kinematic,
 		.is_active = true,
+		.entity_id = entity_id,
 	};
 
 	return id;
@@ -298,11 +300,7 @@ Body* physics_body_get(usize index) {
 	return array_list_get(state.body_list, index);
 }
 
-usize physics_static_body_create(
-	vec2 position, 
-	vec2 size,
-	u8 collision_layer
-) 
+usize physics_static_body_create(vec2 position, vec2 size,u8 collision_layer) 
 {
 	Static_Body static_body = {
 		.aabb = {
@@ -314,6 +312,21 @@ usize physics_static_body_create(
 	if (array_list_append(state.static_body_list, &static_body) == (usize)-1)
 		ERROR_EXIT("Could not append body to list\n");
 	return state.static_body_list->len - 1;
+}
+
+usize physics_trigger_create(vec2 position, vec2 size, u8 collision_layer, u8 collision_mask, On_Hit on_hit) 
+{
+	return physics_body_create(
+		position,
+		size,
+		(vec2){0,0},
+		collision_layer,
+		collision_mask,
+		true,
+		on_hit,
+		NULL,
+		(usize)-1
+	);
 }
 
 Static_Body* physics_static_body_get(usize index) {

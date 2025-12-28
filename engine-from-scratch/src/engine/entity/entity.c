@@ -50,7 +50,8 @@ usize entity_create(
 			collision_mask, 
 			is_kinematic, 
 			on_hit, 
-			on_hit_static
+			on_hit_static,
+			id
 		),
 		.animation_id = animation_id,
 		.is_active = true,

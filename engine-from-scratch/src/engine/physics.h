@@ -22,6 +22,7 @@ struct body {
 	vec2 acceleration;
 	On_Hit on_hit;
 	On_Hit_Static on_hit_static;
+	usize entity_id;
 	u8 collision_layer;
 	u8 collision_mask;
 	bool is_kinematic;
@@ -53,8 +54,10 @@ usize physics_body_create(
 	u8 collition_mask,
 	bool is_kinematic,
 	On_Hit on_hit, 
-	On_Hit_Static on_hit_static
+	On_Hit_Static on_hit_static,
+	usize entity_id
 );
+usize physics_trigger_create(vec2 position, vec2 size, u8 collision_layer, u8 collition_mask, On_Hit on_hit);
 Body* physics_body_get(usize index);
 Static_Body* physics_static_body_get(usize index);
 usize physics_static_body_count();
