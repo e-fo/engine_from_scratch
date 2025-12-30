@@ -70,3 +70,7 @@ usize entity_count()
 {
 	return entity_list->len;
 }
+
+void entity_reset(void) {
+	entity_list->len = 0;
+}

@@ -426,3 +426,8 @@ Hit ray_intersect_aabb(vec2 pos, vec2 magnitude, AABB aabb)
 
 	return hit;
 }
+
+void physics_reset(void) {
+	state.static_body_list->len = 0;
+	state.body_list->len = 0;
+}
