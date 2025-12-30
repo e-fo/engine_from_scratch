@@ -71,7 +71,7 @@ static f32 spawn_timer = 0;
 static u8 enemy_mask = COLLISION_LAYER_PLAYER | COLLISION_LAYER_TERRAIN;
 static u8 player_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRAIN | COLLISION_LAYER_ENEMY_PASSTHROUGH;
 static u8 fire_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_PLAYER;
-static u8 projectile_mask = COLLISION_LAYER_ENEMY;
+static u8 projectile_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRAIN;
 
 static f32 render_width;
 static f32 render_height;
@@ -91,6 +91,20 @@ static usize anim_projectile_small_id;
 
 static usize player_id;
 
+void projectile_on_hit(Body* self, Body* other, Hit hit)
+{
+
+}
+
+void projectile_on_hit_static(Body* self, Static_Body* other, Hit hit)
+{
+    Entity* projectile = entity_get(self->entity_id);
+    if (other->collision_layer == COLLISION_LAYER_TERRAIN)
+    {
+        entity_destroy(self->entity_id);
+    }
+}
+
 static void spawn_projectile(Projectile_Type projectile_type) {
     Weapon weapon = weapons[weapon_type];
     Entity* player = entity_get(player_id);
@@ -108,10 +122,9 @@ static void spawn_projectile(Projectile_Type projectile_type) {
         projectile_mask, 
         true, 
         weapon.projectile_animation_id, 
-        NULL, 
-        NULL
+        projectile_on_hit,
+        projectile_on_hit_static
     );
-    //audio_sound_play(weapon.sfx);
 }
 
 static void input_handler(Body* body_player)

@@ -1,6 +1,7 @@
 #include "../array_list.h"
 #include "../util.h"
 #include "../entity.h"
+#include "../physics.h"
 
 static Array_List* entity_list;
 
@@ -73,4 +74,10 @@ usize entity_count()
 
 void entity_reset(void) {
 	entity_list->len = 0;
+}
+
+void entity_destroy(usize entity_id) {
+	Entity* entity = entity_get(entity_id);
+	physics_body_destroy(entity->body_id);
+	entity->is_active = false;
 }
