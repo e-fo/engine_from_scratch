@@ -76,6 +76,19 @@ void entity_reset(void) {
 	entity_list->len = 0;
 }
 
+// Returns true if entity was destroyed.
+bool entity_damage(usize entity_id, u8 amount)
+{
+	Entity* entity = entity_get(entity_id);
+	if (amount >= entity->health) {
+		entity_destroy(entity_id);
+		return true;
+	}
+
+	entity->health -= amount;
+	return false;
+}
+
 void entity_destroy(usize entity_id) {
 	Entity* entity = entity_get(entity_id);
 	physics_body_destroy(entity->body_id);

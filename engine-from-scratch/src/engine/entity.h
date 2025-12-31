@@ -11,6 +11,7 @@ typedef struct entity {
 	vec2 sprite_offset;
 	bool is_active;
 	bool is_enraged;
+	u8 health;
 } Entity;
 
 void entity_init(void);
@@ -29,5 +30,5 @@ usize entity_create(
 Entity* entity_get(usize id);
 usize entity_count(void);
 void entity_reset(void);
-void entity_damage(usize entity_id, u8 damage);
+bool entity_damage(usize entity_id, u8 damage);
 void entity_destroy(usize entity_id);

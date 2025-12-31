@@ -20,6 +20,11 @@ void reset(void);
 
 static Mix_Music* MUSIC_STAGE_1;
 static Mix_Chunk* SOUND_JUMP;
+static Mix_Chunk* SOUND_SHOOT;
+static Mix_Chunk* SOUND_BULLET_HIT_WALL;
+static Mix_Chunk* SOUND_HURT;
+static Mix_Chunk* SOUND_ENEMY_DEATH;
+static Mix_Chunk* SOUND_PLAYER_DEATH;
 
 static const f32 GROUNDED_TIME      = 0.1f;
 static const f32 JUMP_VELOCITY      = 1350;
@@ -93,7 +98,19 @@ static usize player_id;
 
 void projectile_on_hit(Body* self, Body* other, Hit hit)
 {
-
+    if (other->collision_layer == COLLISION_LAYER_ENEMY)
+    {
+		Entity* projectile = entity_get(self->entity_id);
+        Entity* enemy = entity_get(other->entity_id);
+        if (projectile->animation_id == anim_projectile_small_id) 
+        {
+            if (entity_damage(other->entity_id, 1))
+            {
+                audio_sound_play(SOUND_ENEMY_DEATH);
+            }
+        }
+        audio_sound_play(SOUND_HURT);
+    }
 }
 
 void projectile_on_hit_static(Body* self, Static_Body* other, Hit hit)
@@ -340,6 +357,11 @@ int main(int argc, char *argv[]) {
 
     audio_sound_load(&SOUND_JUMP, "assets/jump.wav");
     audio_music_load(&MUSIC_STAGE_1, "assets/breezys_mega_quest_2_stage_1.mp3");
+    audio_sound_load(&SOUND_SHOOT, "assets/shoot.wav");
+    audio_sound_load(&SOUND_BULLET_HIT_WALL, "assets/bullet_hit_wall.wav");
+    audio_sound_load(&SOUND_HURT, "assets/hurt.wav");
+    audio_sound_load(&SOUND_ENEMY_DEATH, "assets/enemy_death.wav");
+    audio_sound_load(&SOUND_PLAYER_DEATH, "assets/player_death.wav");
 
     SDL_ShowCursor(false);
 
@@ -387,7 +409,7 @@ int main(int argc, char *argv[]) {
     //init weapons
     weapons[WEAPON_TYPE_PISTOL] = (Weapon){
         .projectile_type = PROJECTILE_TYPE_SMALL,
-        .projectile_speed = 200.0f,
+        .projectile_speed = 600.0f,
         .fire_rate = 0.1,
         .recoil = 2.0,
         .projectile_animation_id = anim_projectile_small_id,
