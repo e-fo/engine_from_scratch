@@ -191,7 +191,10 @@ void player_on_hit(Body* self, Body* other, Hit hit)
 {
 	if (other->collision_layer == COLLISION_LAYER_ENEMY)
 	{
-
+        if (other->is_active)
+        {
+            reset();
+        }
 	}
 }
 
@@ -485,7 +488,7 @@ int main(int argc, char *argv[]) {
             0, 
             (vec2) { render_width / 2.0, render_height / 2.0 }, 
             false, 
-            (vec4) {1,1,1,0.2},
+            (vec4) {1,1,1,1},
             texture_slots
         );
 
