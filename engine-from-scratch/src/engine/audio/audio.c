@@ -16,7 +16,7 @@ void audio_init(void) {
 	}
 
 	Mix_Volume(-1, 6);
-	Mix_VolumeMusic(10);
+	Mix_VolumeMusic(30);
 }
 
 void audio_sound_load(Mix_Chunk** chunk, const char* path) {

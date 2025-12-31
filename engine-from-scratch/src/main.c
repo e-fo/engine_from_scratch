@@ -20,6 +20,11 @@ void reset(void);
 
 static Mix_Music* MUSIC_STAGE_1;
 static Mix_Chunk* SOUND_JUMP;
+static Mix_Chunk* SOUND_SHOOT;
+static Mix_Chunk* SOUND_BULLET_HIT_WALL;
+static Mix_Chunk* SOUND_HURT;
+static Mix_Chunk* SOUND_ENEMY_DEATH;
+static Mix_Chunk* SOUND_PLAYER_DEATH;
 
 static const f32 GROUNDED_TIME      = 0.1f;
 static const f32 JUMP_VELOCITY      = 1350;
@@ -58,7 +63,9 @@ typedef struct weapon {
     f32 projectile_speed;
     Projectile_Type projectile_type;
     vec2 sprite_size;
-    vec2 sprote_offset;
+    vec2 sprite_offset;
+    f32 sprite_offset_flipped_x;
+    u32 sprite_coords[2];
 	usize projectile_animation_id;
 } Weapon;
 
@@ -71,7 +78,7 @@ static f32 spawn_timer = 0;
 static u8 enemy_mask = COLLISION_LAYER_PLAYER | COLLISION_LAYER_TERRAIN;
 static u8 player_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRAIN | COLLISION_LAYER_ENEMY_PASSTHROUGH;
 static u8 fire_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_PLAYER;
-static u8 projectile_mask = COLLISION_LAYER_ENEMY;
+static u8 projectile_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRAIN;
 
 static f32 render_width;
 static f32 render_height;
@@ -91,6 +98,32 @@ static usize anim_projectile_small_id;
 
 static usize player_id;
 
+void projectile_on_hit(Body* self, Body* other, Hit hit)
+{
+    if (other->collision_layer == COLLISION_LAYER_ENEMY)
+    {
+		Entity* projectile = entity_get(self->entity_id);
+        Entity* enemy = entity_get(other->entity_id);
+        if (projectile->animation_id == anim_projectile_small_id) 
+        {
+            if (entity_damage(other->entity_id, 1))
+            {
+                audio_sound_play(SOUND_ENEMY_DEATH);
+            }
+        }
+        audio_sound_play(SOUND_HURT);
+    }
+}
+
+void projectile_on_hit_static(Body* self, Static_Body* other, Hit hit)
+{
+    Entity* projectile = entity_get(self->entity_id);
+    if (other->collision_layer == COLLISION_LAYER_TERRAIN)
+    {
+        entity_destroy(self->entity_id);
+    }
+}
+
 static void spawn_projectile(Projectile_Type projectile_type) {
     Weapon weapon = weapons[weapon_type];
     Entity* player = entity_get(player_id);
@@ -102,16 +135,15 @@ static void spawn_projectile(Projectile_Type projectile_type) {
     entity_create(
         body->aabb.position, 
         weapon.sprite_size, 
-        weapon.sprote_offset,
+        weapon.sprite_offset,
         velocity, 
         COLLISION_LAYER_PROJECTILE, 
         projectile_mask, 
         true, 
         weapon.projectile_animation_id, 
-        NULL, 
-        NULL
+        projectile_on_hit,
+        projectile_on_hit_static
     );
-    //audio_sound_play(weapon.sfx);
 }
 
 static void input_handler(Body* body_player)
@@ -161,7 +193,10 @@ void player_on_hit(Body* self, Body* other, Hit hit)
 {
 	if (other->collision_layer == COLLISION_LAYER_ENEMY)
 	{
-
+        if (other->is_active)
+        {
+            reset();
+        }
 	}
 }
 
@@ -327,6 +362,11 @@ int main(int argc, char *argv[]) {
 
     audio_sound_load(&SOUND_JUMP, "assets/jump.wav");
     audio_music_load(&MUSIC_STAGE_1, "assets/breezys_mega_quest_2_stage_1.mp3");
+    audio_sound_load(&SOUND_SHOOT, "assets/shoot.wav");
+    audio_sound_load(&SOUND_BULLET_HIT_WALL, "assets/bullet_hit_wall.wav");
+    audio_sound_load(&SOUND_HURT, "assets/hurt.wav");
+    audio_sound_load(&SOUND_ENEMY_DEATH, "assets/enemy_death.wav");
+    audio_sound_load(&SOUND_PLAYER_DEATH, "assets/player_death.wav");
 
     SDL_ShowCursor(false);
 
@@ -341,6 +381,7 @@ int main(int argc, char *argv[]) {
     Sprite_Sheet sprite_sheet_enemy_large;
     Sprite_Sheet sprite_sheet_props;
     Sprite_Sheet sprite_sheet_fire;
+    Sprite_Sheet sprite_sheet_weapons;
 
 	render_sprite_sheet_init(&sprite_sheet_player, "assets/player.png", 24, 24);
 	render_sprite_sheet_init(&sprite_sheet_map, "assets/map.png", 640, 360);
@@ -348,6 +389,7 @@ int main(int argc, char *argv[]) {
 	render_sprite_sheet_init(&sprite_sheet_enemy_large, "assets/enemy_large.png", 40, 40);
 	render_sprite_sheet_init(&sprite_sheet_props, "assets/props.png", 16, 16);
 	render_sprite_sheet_init(&sprite_sheet_fire, "assets/fire.png", 32, 64);
+	render_sprite_sheet_init(&sprite_sheet_weapons, "assets/weapons.png", 32, 32);
 
     usize adef_player_walk_id = animation_definition_create(&sprite_sheet_player, 0.1, 0, (u8[]){1,2,3,4,5,6,7}, 7);
     usize adef_player_idle_id = animation_definition_create(&sprite_sheet_player, 0, 0, (u8[]){0}, 1);
@@ -374,12 +416,14 @@ int main(int argc, char *argv[]) {
     //init weapons
     weapons[WEAPON_TYPE_PISTOL] = (Weapon){
         .projectile_type = PROJECTILE_TYPE_SMALL,
-        .projectile_speed = 200.0f,
+        .projectile_speed = 600.0f,
         .fire_rate = 0.1,
         .recoil = 2.0,
         .projectile_animation_id = anim_projectile_small_id,
         .sprite_size = {16, 16},
-        .sprote_offset = {0, 0},
+        .sprite_offset = {12, -3},
+		.sprite_offset_flipped_x = -12,
+        .sprite_coords = {0, 3}
     };
 
     reset();
@@ -450,7 +494,7 @@ int main(int argc, char *argv[]) {
             0, 
             (vec2) { render_width / 2.0, render_height / 2.0 }, 
             false, 
-            (vec4) {1,1,1,0.2},
+            (vec4) {1,1,1,1},
             texture_slots
         );
 
@@ -499,6 +543,32 @@ int main(int argc, char *argv[]) {
 			vec2 pos;
             vec2_add(pos, body->aabb.position, entity->sprite_offset);
             animation_render(anim, pos, WHITE, texture_slots);
+        }
+
+		//render weapon
+        {
+			Entity* player = entity_get(player_id);
+			Body* body = physics_body_get(player->body_id);
+			Animation* animation = animation_get(player->animation_id);
+			if (animation != NULL)
+            {
+			    Weapon weapon = weapons[weapon_type];
+			    vec2 weapon_pos;
+                vec2 offset = {
+                    animation->is_flipped ? weapon.sprite_offset_flipped_x : weapon.sprite_offset[0],
+                    weapon.sprite_offset[1]
+                };
+			    vec2_add(weapon_pos, body->aabb.position, offset);
+                render_sprite_sheet_frame(
+                    &sprite_sheet_weapons,
+                    weapon.sprite_coords[0],
+                    weapon.sprite_coords[1],
+                    weapon_pos,
+                    animation->is_flipped,
+                    WHITE,
+                    texture_slots
+                );
+            }
         }
 
         render_end(window, texture_slots);
